@@ -1,0 +1,25 @@
+{
+  "name": "journal-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mock-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon mock-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/curious-rose/journal-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/curious-rose/journal-backend/issues"
+  },
+  "homepage": "https://github.com/curious-rose/journal-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0"
+  }
+}
