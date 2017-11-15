@@ -4,7 +4,7 @@ const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const tokenCheck = require("./middleware/check-login-token.js")
 const loggedInCheck = require("./middleware/only-logged-in.js")
-const cors = require ("cors");
+const cors = require("cors");
 
 app.use(morgan('dev'))
 app.use(cors())
@@ -57,6 +57,13 @@ app.get("/api/entries/:id", loggedInCheck, (req, res) => res.status(200).json({
 }))
 
 //creates a new row in the "users" table of the database
+
+app.get("/api/auth/me", (req, res) => res.send({
+     user_id: 1,
+     firstName: "cors", 
+     lastName: "lite", 
+     email: "corslite@gmail.com", 
+     avatar_url: "gravatar.com/blablabla" }))
 
 app.post("/api/auth/create-account", (req, res) => {
     res.status(200).json({
