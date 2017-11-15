@@ -3,7 +3,7 @@ CREATE DATABASE curious_rose_journal;
 USE curious_rose_journal;
 
 CREATE TABLE users (
-    user_id INT(11) NOT NULL PRIMARY KEY,
+    user_id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
     firstName VARCHAR(25),
     lastName VARCHAR(35),
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -28,8 +28,14 @@ CREATE TABLE journals(
 CREATE TABLE entries(
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     journal_id INT(11) REFERENCES journals (id),
-    contents VARCHAR(3000),
     mood TINYINT(1), 
+    q0 VARCHAR, 
+    q1a1 VARCHAR,
+    q1a2 VARCHAR,
+    q1a3 VARCHAR, 
+    q2 VARCHAR, 
+    q3 VARCHAR, 
+    q4 VARCHAR, 
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 

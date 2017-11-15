@@ -1,24 +1,22 @@
-module.exports = (req, res, next) => {
-
+module.exports = (dataLoader) => (req, res, next) => {
     if (req.headers.authorisation) {
         const token = req.headers.authorisation;
+        console.log("now checking token", token)
         //todo: check token in database Sessions table, if this is a valid token. If so,
         //get the user ID and pull the user record and set req.user to that.
-        req.token = token;
-        req.user = {
-            firstName: "bashu",
-            lastName: "naimi-roy",
-            email: "bashu@gmail.com",
-            password: 12345,
-            createdAt: "2017-12-01 13:14:41",
-            updatedAt: "2017-12-01 13:14:41"
-        }
-        
-
+       dataLoader.checkToken(token).then(
+            (user) => {
+                console.log("token matched with user id:", user)
+                req.token = token;
+                req.user = user
+                next()
+            }
+        ).catch(err=>{
+            console.log("we got an error from the checktoken",err)
+            res.status(401).json(err)
+        })
     }
+    else{next()}
 
-    console.log("middleware achieved")
-
-    next()
-    // res.status(400).json({"unauthorised":true})
+   
 }
