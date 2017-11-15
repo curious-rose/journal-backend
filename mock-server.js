@@ -58,7 +58,7 @@ app.get("/api/entries/:id", loggedInCheck, (req, res) => res.status(200).json({
 
 //creates a new row in the "users" table of the database
 
-app.get("/api/auth/me", (req, res) => res.send({
+app.get("/api/auth/me", (req, res) => res.json({
      user_id: 1,
      firstName: "cors", 
      lastName: "lite", 
