@@ -14,8 +14,9 @@ there are currently only four endpoints:
 **private(need to be authorised)**:
 * /api/entries accepts a GET and sends back an array of journal entries
 * /api/entries/:id accepts a GET and sends back a single entry (only id #1 at the moment)
+* /api/entries also accepts a POST and sends back a single entry with your contents and your mood. 
 
-the two private pages require a *header* in the requests to them:
+the private pages require a *header* in the requests to them. It will look like this:
 
 authorisation: *"literally whatever token"*
 
