@@ -4,9 +4,10 @@ const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const tokenCheck = require("./middleware/check-login-token.js")
 const loggedInCheck = require("./middleware/only-logged-in.js")
-
+const cors = require ("cors");
 
 app.use(morgan('dev'))
+app.use(cors())
 //app.use(express.static('./'));
 app.use(bodyParser.json())
 app.use(tokenCheck)
@@ -75,6 +76,8 @@ app.post("/api/auth/login", (req, res) => {
     //with that user's id and a randomised token. sends that token back in the response, to store in localstorage.
     //that token will let them access private pages. be valid until expiry (30 mins)
     //or until user logs out. Then they have to log in to get another one.
+
+    //should accept "email" and "password" as login info
 
     console.log("user is ", req.user)
     res.status(200).json({
