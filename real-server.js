@@ -9,7 +9,10 @@ const cors = require("cors");
 
 const authController = require("./controllas/auth.js")
 const journalDataLoader = require("./lib/dataLoader.js")
-const connection = mysql.createConnection(process.env.CLEARDB_DATABASE_URL
+//somehow change this to pool using the env variable?
+const connection = mysql.createConnection(
+    
+    process.env.CLEARDB_DATABASE_URL
     )
     .then(connection=> InitializeApp(new journalDataLoader(connection)))
 
@@ -37,7 +40,12 @@ function InitializeApp(dataLoader) {
     //sends back the correct journal entry, using the req.user.id(to find the user)
     //and req.params.id (to find the specific entry ID)
     //
+    app.get("/api/auth/me", loggedInCheck,(req,res)=>
     
+        res.status(200).json(req.user)
+
+    
+)
     app.get("/api/entries/:id", loggedInCheck, (req, res) => {
         console.log("so I'm looking for entry with id", req.params.id, "and seeing if it belongs to user", req.user.user_id)
         dataLoader.getSingleEntry(req.params.id, req.user.user_id).then(entry => {

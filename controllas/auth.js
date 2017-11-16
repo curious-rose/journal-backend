@@ -24,7 +24,7 @@ module.exports = (dataLoader) => {
 
     })
 
-
+    
     authController.post("/login", (req, res) => {
         console.log("authController: posting to login with credentials", req.body)
         dataLoader.createToken(
