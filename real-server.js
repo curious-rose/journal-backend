@@ -52,8 +52,9 @@ app.get("/api/entries/:id", loggedInCheck, (req, res) => {
 
 
 app.post("/api/entries", loggedInCheck, (req, res) => {
-    //Fix This WriteEntry Function Right Away
-    // dataLoader.writeEntry(req.body.entryDataObj)
+// so POST requests to this endpoint will have a JSON object in their body.
+//that object will have 
+    dataLoader.writeEntry(req.body.entryDataObj,req.user.user_id)
     console.log('writing entry to journal')
     res.status(200).json(result)
 })

@@ -6,9 +6,10 @@ module.exports = (dataLoader) => (req, res, next) => {
         //get the user ID and pull the user record and set req.user to that.
        dataLoader.checkToken(token).then(
             (user) => {
+                if(user){
                 console.log("token matched with user id:", user)
                 req.token = token;
-                req.user = user
+                req.user = user}
                 next()
             }
         ).catch(err=>{
