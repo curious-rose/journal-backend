@@ -16,8 +16,8 @@ module.exports = (dataLoader) => {
             res.status(200).json(
                 userObj
             )
-        }).catch(err =>
-            {console.log(err)
+        }).catch(err => {
+            console.log(err)
             return res.status(401).json(err)
         }
             )
@@ -26,16 +26,17 @@ module.exports = (dataLoader) => {
 
 
     authController.post("/login", (req, res) => {
-        console.log("posting to login with credentials",req.body)
+        console.log("authController: posting to login with credentials", req.body)
         dataLoader.createToken(
             req.body.email,
             req.body.password
         ).then((token) =>
 
             res.status(201).json({ token })
-            ).catch(err => {console.log(err)
-            return res.status(401).json(err)
-        })
+            ).catch(err => {
+                console.log(err)
+                res.status(401).json(err)
+            })
     })
     return authController;
 
