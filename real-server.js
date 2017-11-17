@@ -7,12 +7,13 @@ const checkLoginToken = require("./middleware/check-login-token.js")
 const loggedInCheck = require("./middleware/only-logged-in.js")
 const cors = require("cors");
 
+
+
 const authController = require("./controllas/auth.js")
 const journalDataLoader = require("./lib/dataLoader.js")
 //somehow change this to pool using the env variable?
 const connection = mysql.createConnection(
-process.env.CLEARDB_DATABASE_URL
-
+    process.env.CLEARDB_DATABASE_URL
 )
     .then(connection => InitializeApp(new journalDataLoader(connection)))
 
@@ -36,7 +37,15 @@ function InitializeApp(dataLoader) {
     //so we'll query the database with that user ID.
     app.get("/api/entries", loggedInCheck, (req, res) => {
         console.log("so I'm getting entries for user", req.user.user_id)
-        dataLoader.getJournalEntries(req.user.user_id).then(entries =>
+        dataLoader.getJournalEntries(req.user.user_id, req.headers.amount).then(entries =>
+            res.status(200).json(entries))
+    })
+
+    //this is the geotagged entries filter query: returns an array of entries 
+    //with geotags
+    app.get("/api/geotags", loggedInCheck, (req, res) => {
+        console.log("getting geotagged entries for user", req.user.user_id)
+        dataLoader.getGeotaggedEntries(req.user.user_id, req.headers.amount).then(entries =>
             res.status(200).json(entries))
     })
     //again checks if the user is logged in, if not "screw off", if yes,
@@ -54,13 +63,13 @@ function InitializeApp(dataLoader) {
             console.log("we found the entry:", entry)
             res.status(200).json(entry)
         })
-        .catch(err => {
+            .catch(err => {
                 console.log(err)
                 return res.status(404).json(err)
-                
+
             })
-            
-        }
+
+    }
     )
     app.delete("/api/entries/:id", loggedInCheck, (req, res) => {
         console.log("so I'm looking for entry with id", req.params.id, "and seeing if it belongs to user", req.user.user_id)
@@ -80,16 +89,16 @@ function InitializeApp(dataLoader) {
 
     }
     )
-    
+
     app.post("/api/entries", loggedInCheck, (req, res) => {
         // so POST requests to this endpoint will have a JSON object in their body.
         //that object will have all entry fields.
-        console.log(`writing an entry with the title:"${req.body.title}"`)
+        console.log(`writing an entry with the body:"${req.body}"`)
         dataLoader.writeEntry(req.body, req.user.user_id).then(
             result => res.status(200).send("Successfully wrote an entry")
-            
+
         )
     })
-    
+
     app.listen(process.env.PORT || 3000)
 }
