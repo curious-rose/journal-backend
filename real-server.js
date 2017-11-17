@@ -11,7 +11,9 @@ const cors = require("cors");
 
 const authController = require("./controllas/auth.js")
 const journalDataLoader = require("./lib/dataLoader.js")
+
 //somehow change this to pool using the env variable?
+app.use(cors())
 const connection = mysql.createConnection(
     process.env.CLEARDB_DATABASE_URL
 )
@@ -25,7 +27,6 @@ function InitializeApp(dataLoader) {
 
 
     app.use(morgan('dev'))
-    app.use(cors())
     //app.use(express.static('./'));
     app.use(bodyParser.json())
     app.use(checkLoginToken(dataLoader))
