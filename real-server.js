@@ -11,12 +11,15 @@ const authController = require("./controllas/auth.js")
 const journalDataLoader = require("./lib/dataLoader.js")
 //somehow change this to pool using the env variable?
 const connection = mysql.createConnection(
-    
+
     process.env.CLEARDB_DATABASE_URL
-    )
-    .then(connection=> InitializeApp(new journalDataLoader(connection)))
+)
+    .then(connection => InitializeApp(new journalDataLoader(connection)))
 
-
+//putting this in a function and then only running it once the connection is finished,
+//and passing in the dataloader that we instantiated with the connection to the
+//database
+//thus ensuring that we won't run functions without a connection
 function InitializeApp(dataLoader) {
 
 
@@ -26,8 +29,8 @@ function InitializeApp(dataLoader) {
     app.use(bodyParser.json())
     app.use(checkLoginToken(dataLoader))
     app.use("/api/auth", authController(dataLoader))
-    
-    
+
+
     //this is a private page so we'll check if user is logged in
     //if they are, there will be a user object in the request object (req.user)
     //so we'll query the database with that user ID.
@@ -40,24 +43,41 @@ function InitializeApp(dataLoader) {
     //sends back the correct journal entry, using the req.user.id(to find the user)
     //and req.params.id (to find the specific entry ID)
     //
-    app.get("/api/auth/me", loggedInCheck,(req,res)=>
-    
-        res.status(200).json(req.user)
+    app.get("/api/auth/me", loggedInCheck, (req, res) =>
 
-    
-)
+        res.status(200).json(req.user)
+    )
+
     app.get("/api/entries/:id", loggedInCheck, (req, res) => {
         console.log("so I'm looking for entry with id", req.params.id, "and seeing if it belongs to user", req.user.user_id)
         dataLoader.getSingleEntry(req.params.id, req.user.user_id).then(entry => {
             console.log("we found the entry:", entry)
             res.status(200).json(entry)
         })
-            .catch(err => {
+        .catch(err => {
                 console.log(err)
                 return res.status(404).json(err)
-    
+                
             })
-    
+            
+        }
+    )
+    app.delete("/api/entries/:id", loggedInCheck, (req, res) => {
+        console.log("so I'm looking for entry with id", req.params.id, "and seeing if it belongs to user", req.user.user_id)
+        dataLoader.deleteEntry(req.params.id, req.user.user_id).then(response => {
+            if (response.affectedRows > 0) {
+                res.status(200).send("successfully deleted")
+            }
+            else {
+                res.status(404).send("nothing was deleted")
+            }
+        })
+            .catch(err => {
+                console.log("delete returned an error:", err)
+                return res.status(401).json(err)
+
+            })
+
     }
     )
     
@@ -66,7 +86,7 @@ function InitializeApp(dataLoader) {
         //that object will have all entry fields.
         console.log(`writing an entry with the title:"${req.body.title}"`)
         dataLoader.writeEntry(req.body, req.user.user_id).then(
-        result=>res.status(200).send("Successfully wrote an entry")
+            result => res.status(200).send("Successfully wrote an entry")
             
         )
     })
