@@ -24,7 +24,20 @@ module.exports = (dataLoader) => {
 
     })
 
-    
+    authController.delete("/logout", (req, res) => {
+        console.log("authController: logging out user", req.user.user_id, "and deleting token", req.token)
+        dataLoader.deleteToken(req.token).then(
+            response=>{
+                if (response.affectedRows > 0) {
+                    res.status(200).send("successfully logged out")
+                }
+                else {
+                    res.status(404).send("token wasn't deleted")
+                }
+            }
+        )
+    }
+    )
     authController.post("/login", (req, res) => {
         console.log("authController: posting to login with credentials", req.body)
         dataLoader.createToken(

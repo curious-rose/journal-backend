@@ -11,9 +11,7 @@ const authController = require("./controllas/auth.js")
 const journalDataLoader = require("./lib/dataLoader.js")
 //somehow change this to pool using the env variable?
 const connection = mysql.createConnection(
-
-    process.env.CLEARDB_DATABASE_URL
-)
+`mysql://bf6ef13562bd66:997df2a0@us-cdbr-iron-east-05.cleardb.net/heroku_f43acdfbd975755?reconnect=true`)
     .then(connection => InitializeApp(new journalDataLoader(connection)))
 
 //putting this in a function and then only running it once the connection is finished,
