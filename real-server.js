@@ -14,8 +14,7 @@ const journalDataLoader = require("./lib/dataLoader.js")
 
 //somehow change this to pool using the env variable?
 const connection = mysql.createConnection(
-"    mysql://bf6ef13562bd66:997df2a0@us-cdbr-iron-east-05.cleardb.net/heroku_f43acdfbd975755?reconnect=true"    
-    // process.env.CLEARDB_DATABASE_URL
+    process.env.CLEARDB_DATABASE_URL
 )
     .then(connection => InitializeApp(new journalDataLoader(connection)))
 
@@ -40,7 +39,7 @@ function InitializeApp(dataLoader) {
     app.get("/api/entries", loggedInCheck, (req, res) => {
         console.log("so I'm getting entries for user", req.user.user_id)
         console.log("the headers are",req.headers)
-        dataLoader.getJournalEntries(req.user.user_id, req.headers.days).then(entries =>
+        dataLoader.getJournalEntries(req.user.user_id, req.headers.days,req.headers.searchTerm).then(entries =>
             res.status(200).json(entries))
     })
 
@@ -49,7 +48,7 @@ function InitializeApp(dataLoader) {
     app.get("/api/geotags", loggedInCheck, (req, res) => {
         console.log("getting geotagged entries for user", req.user.user_id)
         console.log("the headers are",req.headers)      
-        dataLoader.getGeotaggedEntries(req.user.user_id, req.headers.days).then(entries =>
+        dataLoader.getGeotaggedEntries(req.user.user_id, req.headers.days,req.headers.searchTerm).then(entries =>
             res.status(200).json(entries))
     })
     //again checks if the user is logged in, if not "screw off", if yes,
