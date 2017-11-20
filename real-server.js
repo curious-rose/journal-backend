@@ -40,8 +40,8 @@ function InitializeApp(dataLoader) {
         console.log("so I'm getting entries for user", req.user.user_id)
         console.log("the headers are",req.headers)
         dataLoader.getJournalEntries(req.user.user_id, req.headers.days,req.headers.searchTerm).then(entries =>
-            res.status(200).json(entries))
-    })
+            {console.log("we found normal entries",entries);res.status(200).json(entries)})
+        })
 
     //this is the geotagged entries filter query: returns an array of entries 
     //with geotags
@@ -49,7 +49,7 @@ function InitializeApp(dataLoader) {
         console.log("getting geotagged entries for user", req.user.user_id)
         console.log("the headers are",req.headers)      
         dataLoader.getGeotaggedEntries(req.user.user_id, req.headers.days,req.headers.searchTerm).then(entries =>
-            res.status(200).json(entries))
+            {console.log("we found geotagged entries",entries);res.status(200).json(entries)})
     })
     //again checks if the user is logged in, if not "screw off", if yes,
     //sends back the correct journal entry, using the req.user.id(to find the user)
