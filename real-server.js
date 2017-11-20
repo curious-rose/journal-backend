@@ -39,7 +39,7 @@ function InitializeApp(dataLoader) {
     app.get("/api/entries", loggedInCheck, (req, res) => {
         console.log("so I'm getting entries for user", req.user.user_id)
         console.log("the headers are",req.headers)
-        dataLoader.getJournalEntries(req.user.user_id, req.headers.days,req.headers.searchTerm).then(entries =>
+        dataLoader.getJournalEntries(req.user.user_id, req.headers.days,req.headers.searchTerm,req.headers.moodLimit).then(entries =>
             {console.log("we found normal entries",entries);res.status(200).json(entries)})
         })
 
@@ -48,7 +48,7 @@ function InitializeApp(dataLoader) {
     app.get("/api/geotags", loggedInCheck, (req, res) => {
         console.log("getting geotagged entries for user", req.user.user_id)
         console.log("the headers are",req.headers)      
-        dataLoader.getGeotaggedEntries(req.user.user_id, req.headers.days,req.headers.searchTerm).then(entries =>
+        dataLoader.getGeotaggedEntries(req.user.user_id, req.headers.days,req.headers.searchTerm,req.headers.moodLimit).then(entries =>
             {console.log("we found geotagged entries",entries);res.status(200).json(entries)})
     })
     //again checks if the user is logged in, if not "screw off", if yes,
