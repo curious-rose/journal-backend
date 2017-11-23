@@ -97,8 +97,9 @@ function InitializeApp(dataLoader) {
 
     }
     )
-    
+
     app.post("/api/entries/:id", loggedInCheck, (req, res) => {
+            //this is the edit endpoint
         // so POST requests to this endpoint will have a JSON object in their body.
         //that object will have all entry fields.
         console.log(`editing an entry with the body:"${req.body}"`)
