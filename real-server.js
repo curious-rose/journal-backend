@@ -97,7 +97,16 @@ function InitializeApp(dataLoader) {
 
     }
     )
+    
+    app.post("/api/entries/:id", loggedInCheck, (req, res) => {
+        // so POST requests to this endpoint will have a JSON object in their body.
+        //that object will have all entry fields.
+        console.log(`editing an entry with the body:"${req.body}"`)
+        dataLoader.editEntry(req.body, req.user.user_id,req.params.id).then(
+            result => res.status(200).send(`Successfully edited entry ${req.params.id}`)
 
+        )
+    })
     app.post("/api/entries", loggedInCheck, (req, res) => {
         // so POST requests to this endpoint will have a JSON object in their body.
         //that object will have all entry fields.
@@ -107,6 +116,8 @@ function InitializeApp(dataLoader) {
 
         )
     })
+    //this is the edit method
+    
 
     app.listen(process.env.PORT || 3000)
 }
