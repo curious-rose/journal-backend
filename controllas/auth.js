@@ -2,7 +2,7 @@ const express = require("express")
 
 module.exports = (dataLoader) => {
     const authController = express.Router();
-
+    
     authController.post("/create-account", (req, res) => {
         dataLoader.createAccount(
             {
